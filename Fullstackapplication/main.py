@@ -40,12 +40,15 @@ def get_all_sports(db: Session = Depends(get_db)):
 
 # Update a sport by ID
 @app.put("/update_sports_id/{sportsid}", response_model=SportsRead)
+#sports_update : variable to store the updated sport
+# sportcreate : gives the permission to update the sport as the format which is set in the pydantic model
+# session = Depends : interact dependency with the FastAPI
 def update_sports_by_id(sportsid: int, sport_update: SportsCreate, db: Session = Depends(get_db)):
     db_sport = db.query(Sports).filter(Sports.id == sportsid).first()
     if db_sport is None:
         raise HTTPException(status_code=404, detail="Sport not found")
-    for key, value in sport_update.dict().items():
-        setattr(db_sport, key, value)
+    
+    db.query(Sports).filter(Sports.id == sportsid).update(sport_update.dict())
     db.commit()
     db.refresh(db_sport)
     return db_sport

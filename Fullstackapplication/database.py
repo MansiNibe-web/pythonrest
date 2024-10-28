@@ -12,6 +12,8 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Dependency to provide database sessions
+# generator function includes yield
+# yield : returns the value one by one 
 def get_db():
     db = SessionLocal()
     try:
